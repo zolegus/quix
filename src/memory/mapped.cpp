@@ -1,0 +1,117 @@
+//
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//
+#include <memory/mapped.hpp>
+#include <string>
+#include <stdexcept>
+//
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//
+#include <cstring>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/mman.h>
+//
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//
+struct memory::mapped::impl
+{
+  void *data_mem{ nullptr };
+	std::size_t size_mem{ 0 };
+
+  impl( const std::string&, const std::size_t, const std::size_t );
+  ~impl();
+};
+//
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//
+memory::mapped::impl::impl(
+  const std::string &filename_arg,
+  const std::size_t base_arg,
+  const std::size_t size_arg
+  )
+	: size_mem( size_arg )
+{
+  int fd = open( filename_arg.c_str(), O_RDWR, 0 );
+  if( fd < 0 ) throw std::runtime_error( "Failed to open file to memory map" );
+  
+  data_mem = mmap( 
+    ( void* )( base_arg * 1024 ), 
+    size_arg,  
+    PROT_READ | PROT_WRITE, 
+    MAP_SHARED, 
+    fd, 
+    0 
+    );
+  close( fd );
+
+  if( data_mem < 0 ) 
+    throw std::runtime_error( "Failed to map file into memory" );
+}
+//
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//
+memory::mapped::impl::~impl()
+{
+  munmap( data_mem, size_mem );
+}
+//
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//
+memory::mapped::mapped(
+  const std::string &filename_arg,
+  const std::size_t base_arg,
+  const std::size_t size_arg
+  )
+  : pimpl( 
+      new impl( 
+        filename_arg, 
+        base_arg, 
+        size_arg
+        )
+      )
+{
+  return;
+}
+//
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//
+memory::mapped::~mapped()
+{
+  delete pimpl;
+}
+//
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//
+void*
+memory::mapped::data( 
+  const std::size_t offset_arg 
+  )
+{
+  return reinterpret_cast< uint8_t* >( pimpl->data_mem ) + offset_arg;
+}
+//
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//
+std::size_t
+memory::mapped::size( 
+  const std::size_t offset_arg 
+  )
+{
+  return pimpl->size_mem - offset_arg;
+}
+//
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//
+std::string
+toString(
+  const memory::mapped& mapped_arg
+  )
+{ 
+  return "";
+}
+//
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//

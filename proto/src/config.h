@@ -1,0 +1,20 @@
+#ifndef __GUARD__CONFIG_H__
+#define __GUARD__CONFIG_H__
+
+
+#define DEBUG_SKIP_MASK 0xFFFFFFF
+
+
+#define RING_ENTRY_COUNT 256
+#define RING_ENTRY_MASK  ( RING_ENTRY_COUNT - 1 )
+#define MAX_NODE_COUNT 8
+#define MAX_CHAN_COUNT 8
+#define MAX_FOLL_COUNT 8
+#define NODE_MEMORY_POOL_SIZE ( 5 * 1024 * 1024 )
+#define MMFILE_SIZE ( MAX_NODE_COUNT * NODE_MEMORY_POOL_SIZE * 2 )
+#define MMAP_ADDR ( ( void* )0xa000000 )
+#define RAW_MSG_SIZE_MAX  ( 16 * 1024 )
+#define TCP_LISTENQ 1024
+
+
+#endif //  __GUARD__CONFIG_H__
