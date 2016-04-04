@@ -5,7 +5,6 @@
 #include <utility/testing.h>
 #include <sstream>
 #include <memory>
-#include <iostream>
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -53,7 +52,6 @@ namespace {
       settings_stringstream << "\n";
     }
 
-		std::cout << settings_stringstream.str() << std::endl;
     return settings_stringstream;
   }
 }
