@@ -12,12 +12,12 @@
 //
 namespace types
 {
-  template< typename T > struct alignas(64) buffer;
+  template< typename T, std::size_t R > struct alignas( 64 ) buffer;
 }
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
-template< typename T > std::string toString( const types::buffer< T >& );
+template< typename T, std::size_t R > std::string toString( const types::buffer< T, R >& );
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //

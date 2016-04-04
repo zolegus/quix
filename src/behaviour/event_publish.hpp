@@ -101,6 +101,8 @@ toString(
   const behaviour::event_publish< E >& event_publish_arg
   )
 { 
+  throw std::runtime_error( "Unimplemented" );
+  return ""; 
 }
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////

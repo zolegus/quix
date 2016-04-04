@@ -295,6 +295,8 @@ toString(
   const transport::lwd< E >& processor
   )
 { 
+  throw std::runtime_error( "Unimplemented" );
+  return ""; 
 }
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////

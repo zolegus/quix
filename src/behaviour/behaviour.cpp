@@ -29,8 +29,8 @@ char* event_to_string( event_t *event_ptr )
 
 char* order_to_string( order_t *order_ptr )
 {
-  static char string[99] = {0};
-  return string;
+  throw std::runtime_error( "Unimplemented" );
+  return ""; 
 }
 
 #endif

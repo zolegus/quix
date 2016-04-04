@@ -51,11 +51,7 @@ int main(
     );
 
   behaviour_type behaviour(
-    behaviour_memory.data( 
-      cfg.get< std::size_t >( "behaviour.memory.offset" ) 
-      ),
-    cfg.get< std::string >( "behaviour.tcp.hostname" ),
-    cfg.get< unsigned short >( "behaviour.tcp.port" )
+    cfg.get< std::string >( "behaviour.tcp.address" )
     );
 
   node_type node( 

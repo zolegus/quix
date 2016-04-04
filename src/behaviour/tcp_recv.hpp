@@ -7,34 +7,32 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
 #include <behaviour/tcp_recv.hh>
+#include <types/event.hh>
 #include <types/buffer.hh>
-//
-///////////////////////////////////////////////////////////////////////////////////////////////////
-//
-#include <stdio.h> // printf
-#include <stdlib.h> //exit
-#include <unistd.h> // read/close
-#include <errno.h> //errno
-#include <string.h> //strerror
-#include <sys/socket.h>
-#include <netinet/in.h> //sockaddr_in
-#include <arpa/inet.h>
+#include <network/shared_socket.hh>
+#include <stdexcept>
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
 template< typename E >
 struct behaviour::tcp_recv< E >::impl
 {
+  static constexpr int pool_slot_count{ 256 };
+  static constexpr int pool_mask{ pool_slot_count - 1 };
+
   using event_type = E;
-	using data_type = uint8_t;
-  using buffer_type = types::buffer< char >;
+  using buffer_type = typename event_type::buffer_type;
+
+  struct data_type
+	{
+    alignas( 64 ) int pool_slot_cursor;
+    alignas( 64 ) buffer_type buffer_pool[ pool_slot_count ];
+	};
 
   data_type *data_mem;
+	network::shared_socket receiver_mem;
 
-  unsigned int idx;
-  int fd;
-
-  impl( data_type*, const std::string&, int ) ;
+  impl( data_type*, const std::string& ) ;
   void operator()( event_type& );
   bool post();
 };
@@ -43,55 +41,13 @@ struct behaviour::tcp_recv< E >::impl
 //
 template< typename E >
 behaviour::tcp_recv< E >::impl::impl(
-  data_type* data_arg,
-  const std::string& hostname_arg,
-  int port_arg
+  data_type *data_arg,
+  const std::string &address_arg
   )
   : data_mem( data_arg )
+	, receiver_mem( address_arg )
 {
-#if 0
-  int socket_port = get_argument_as_int( 'p' );
-  buffer_pool_ptr = raw;
-  idx = 0;
-
-  // Open socket for receiving
-  struct sockaddr_in servaddr;
-  bzero(&servaddr,sizeof(servaddr));
-	servaddr.sin_family = AF_INET;
-  servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
-  servaddr.sin_port = htons(socket_port);
-
-  int listen_fd;
-  if( ( listen_fd = socket(AF_INET, SOCK_STREAM, 0 ) ) < 0 )
-  {
-    printf( "Failed create listen socket for port %d: %d %s\n", 
-      socket_port, errno, strerror( errno ) );
-    exit( 1 );
-  }
-
-  if( bind( listen_fd, ( struct sockaddr* )&servaddr, sizeof( servaddr ) ) < 0 )
-  {
-    printf( "Failed to bind listen socket for  %s: %d %s\n", 
-      socket_port, errno, strerror( errno ) );
-    exit( 1 );
-  }
-
-  if( listen( listen_fd, TCP_LISTENQ ) < 0 )
-  {
-    printf( "Failed start listening on port %d: %d %s\n", 
-      socket_port, errno, strerror( errno ) );
-    exit( 1 );
-  }
-
-  if( ( fd = accept( listen_fd, (struct sockaddr*)0, 0 ) ) < 0 )
-  {
-    printf( "Failed to accept incoming connection on port %d: %d %s\n", 
-      socket_port, errno, strerror( errno ) );
-    exit( 1 );
-  }
-
-  close( listen_fd );
-#endif
+  return;
 }
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -102,11 +58,8 @@ behaviour::tcp_recv< E >::impl::operator()(
   event_type &event 
   )
 {
-  auto buffer = reinterpret_cast< buffer_type* >( data_mem );
-  //buffer->size = read( fd, buffer->data, RAW_MSG_SIZE_MAX );
-  buffer->data[ buffer->size ] = 0;
-  event.buffer_mem = buffer;
-  data_mem += ( ( sizeof( buffer->size ) + buffer->size + 63 ) & ~0x4F );
+  event.buffer_mem = &data_mem->buffer_pool[ ++data_mem->pool_slot_cursor ];
+  //event.buffer_mem->size = receiver_mem.recv( event.buffer_mem->data, event.buffer_mem->reserved );
 }
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -123,14 +76,12 @@ behaviour::tcp_recv< E >::impl::post()
 template< typename E >
 behaviour::tcp_recv< E >::tcp_recv( 
   void* data_arg, 
-  const std::string &hostname_arg, 
-  int port_arg 
+  const std::string &address_arg
   )
   : pimpl( 
       new impl( 
         reinterpret_cast< typename impl::data_type* >( data_arg ), 
-        hostname_arg, 
-        port_arg 
+        address_arg
         )
       )
 {
@@ -173,6 +124,8 @@ toString(
   const behaviour::tcp_recv< E >& tcp_recv_arg
   )
 { 
+  throw std::runtime_error( "Unimplemented" );
+  return ""; 
 }
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////

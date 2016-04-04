@@ -21,7 +21,7 @@ public:
 
   using event_type = E;
 
-  tcp_recv( void*, const std::string&, int );
+  tcp_recv( void*, const std::string& );
   tcp_recv( const tcp_recv& ) = delete;
   tcp_recv( tcp_recv&& ) = delete;
   tcp_recv& operator=( tcp_recv ) = delete;

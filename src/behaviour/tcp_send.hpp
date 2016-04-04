@@ -7,6 +7,9 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
 #include <behaviour/tcp_send.hh>
+#include <network/shared_socket.hh>
+#include <types/buffer.hh>
+#include <stdexcept>
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -26,9 +29,9 @@ struct behaviour::tcp_send< E >::impl
 {
   using event_type = E;
 
-  int fd;
+	network::shared_socket sender_mem;
 
-  impl( const std::string&, int );
+  impl( const std::string& );
   void operator()( event_type &event );
   bool post();
 };
@@ -37,51 +40,11 @@ struct behaviour::tcp_send< E >::impl
 //
 template< typename E >
 behaviour::tcp_send< E >::impl::impl(
-  const std::string &hostname_arg,
-  int port_arg
+  const std::string &address_arg
   )
+	: sender_mem( address_arg )
 {
-#if 0
-  int socket_port = get_argument_as_int( 'p' );
-
-  // Open socket for sending
-  struct sockaddr_in servaddr;
-  bzero(&servaddr,sizeof(servaddr));
-	servaddr.sin_family = AF_INET;
-  servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
-  servaddr.sin_port = htons(socket_port);
-
-  int listen_fd;
-  if( ( listen_fd = socket(AF_INET, SOCK_STREAM, 0 ) ) < 0 )
-  {
-    printf( "Failed create listen socket for port %p: %d %s\n", 
-      socket_port, errno, strerror( errno ) );
-    exit( 1 );
-  }
-
-  if( bind( listen_fd, ( struct sockaddr* )&servaddr, sizeof( servaddr ) ) < 0 )
-  {
-    printf( "Failed create listen socket for port %d: %d %s\n", 
-      socket_port, errno, strerror( errno ) );
-    exit( 1 );
-  }
-
-  if( listen( listen_fd, TCP_LISTENQ ) < 0 )
-  {
-    printf( "Failed to bind listen socket for  %s: %d %s\n", 
-      socket_port, errno, strerror( errno ) );
-    exit( 1 );
-  }
-
-  if( ( fd = accept( listen_fd, (struct sockaddr*)0, 0 ) ) < 0 )
-  {
-    printf( "Failed to accept incoming connection on port %d: %d %s\n", 
-      socket_port, errno, strerror( errno ) );
-    exit( 1 );
-  }
-
-  close( listen_fd );
-#endif
+  return;
 }
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -92,8 +55,7 @@ behaviour::tcp_send< E >::impl::operator()(
   event_type &event 
   )
 {
-  //auto buffer = event->buffer;
-  //write( fd, buffer->data, buffer->size );
+	//sender_mem.send( event.buffer_mem->data, event.buffer_mem->size );
 }
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -109,14 +71,11 @@ behaviour::tcp_send< E >::impl::post()
 //
 template< typename E >
 behaviour::tcp_send< E >::tcp_send(
-  void*,
-  const std::string &hostname_arg,
-  int port_arg
+  const std::string &address_arg
   )
   : pimpl( 
       new impl( 
-        hostname_arg, 
-        port_arg 
+        address_arg 
         )
       )
 {
@@ -159,6 +118,8 @@ toString(
   const behaviour::tcp_send< E >& tcp_send_arg
   )
 { 
+  throw std::runtime_error( "Unimplemented" );
+  return ""; 
 }
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////

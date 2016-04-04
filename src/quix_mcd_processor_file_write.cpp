@@ -51,9 +51,6 @@ int main(
     );
 
   behaviour_type behaviour(
-    behaviour_memory.data( 
-      cfg.get< std::size_t >( "behaviour.memory.offset" ) 
-      ),
     cfg.get< std::string >( "behaviour.file.write" )
     );
 

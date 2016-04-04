@@ -110,7 +110,8 @@ toString(
   const memory::mapped& mapped_arg
   )
 { 
-  return "";
+  throw std::runtime_error( "Unimplemented" );
+  return ""; 
 }
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////

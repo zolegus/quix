@@ -94,7 +94,8 @@ toString(
   const memory::shared& shared_arg
   )
 { 
-  return "";
+  throw std::runtime_error( "Unimplemented" );
+  return ""; 
 }
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////

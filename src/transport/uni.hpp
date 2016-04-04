@@ -87,8 +87,6 @@ transport::uni< E >::impl::impl(
 
   int f = *follow_list_arg.begin();
   consumed_value_ptr = &meta_mem[ f ].value;
-
-	std::cout << "Starting node " << node_id_mem << ", following " << f << std::endl;
 }
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -276,6 +274,8 @@ toString(
   const transport::uni< E >& processor
   )
 { 
+  throw std::runtime_error( "Unimplemented" );
+  return ""; 
 }
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////

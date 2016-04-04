@@ -21,7 +21,7 @@ public:
 
   using event_type = E;
 
-  file_write(  void*,  const std::string& );
+  file_write( const std::string& );
   file_write( const file_write& ) = delete;
   file_write( file_write&& ) = delete;
   file_write& operator=( file_write ) = delete;

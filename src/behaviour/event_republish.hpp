@@ -103,6 +103,8 @@ toString(
   const behaviour::event_republish< E >& event_republish_arg
   )
 { 
+  throw std::runtime_error( "Unimplemented" );
+  return ""; 
 }
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////

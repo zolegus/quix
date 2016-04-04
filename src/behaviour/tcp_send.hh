@@ -21,7 +21,7 @@ public:
 
   using event_type = E;
 
-  tcp_send(  void*, const std::string&, int );
+  tcp_send( const std::string& );
   tcp_send( const tcp_send& ) = delete;
   tcp_send( tcp_send&& ) = delete;
   tcp_send& operator=( tcp_send ) = delete;

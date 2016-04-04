@@ -7,8 +7,10 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
 #include <behaviour/file_read.hh>
+#include <types/event.hh>
 #include <types/buffer.hh>
 #include <fstream>
+#include <stdexcept>
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -20,12 +22,21 @@
 template< typename E >
 struct behaviour::file_read< E >::impl
 {
+  static constexpr int pool_slot_count{ 256 };
+  static constexpr int pool_mask{ pool_slot_count - 1 };
+
   using event_type = E;
-	using data_type = uint8_t;
-  using buffer_type = types::buffer< char >;
+  using buffer_type = typename event_type::buffer_type;
+
+  struct data_type
+	{
+    alignas( 64 ) int pool_slot_cursor;
+    alignas( 64 ) buffer_type buffer_pool[ pool_slot_count ];
+	};
 
   data_type *data_mem;
 	std::ifstream file;
+  bool again_mem;
 
   impl( data_type*, const std::string& );
   void operator()( event_type &event );
@@ -42,7 +53,7 @@ behaviour::file_read< E >::impl::impl(
   : data_mem( data_arg )
 	, file( filename_arg )
 {
-  return;
+  file.exceptions( std::ifstream::badbit | std::ifstream::failbit );
 }
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -53,11 +64,10 @@ behaviour::file_read< E >::impl::operator()(
   event_type &event 
   )
 {
-  auto buffer = reinterpret_cast< buffer_type* >( data_mem );
-  file.getline( buffer->data, 65536 );
-  buffer->size = file.gcount() - 1;
-  event.buffer_mem = buffer;
-  data_mem += ( ( sizeof( buffer->size ) + buffer->size + 63 ) & ~0x4F );
+  event.buffer_mem = &data_mem->buffer_pool[ ++data_mem->pool_slot_cursor ];
+  file.getline( event.buffer_mem->data, event.buffer_mem->reserved );
+  event.buffer_mem->size = file.gcount() - 1;
+  if( event.buffer_mem->size ) again_mem == false;
 }
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -66,7 +76,7 @@ template< typename E >
 bool
 behaviour::file_read< E >::impl::post()
 {
-  return true;
+  return again_mem;
 }
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -122,7 +132,8 @@ toString(
   const behaviour::file_read< E >& file_read_arg
   )
 {
-  return; 
+  throw std::runtime_error( "Unimplemented" );
+  return ""; 
 }
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////

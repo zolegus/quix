@@ -14,7 +14,8 @@
 //
 struct types::event
 {
-	types::buffer< char > *buffer_mem;
+  using buffer_type = types::buffer< char, 4000 >;
+	buffer_type *buffer_mem;
 	types::message *message_mem;
 };
 //

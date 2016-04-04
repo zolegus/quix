@@ -10,6 +10,7 @@
 #include <utility/configuration.hh>
 #include <transport/slot.hpp> // TODO: because of auto deduction - refactor out
 #include <iostream>
+#include <stdexcept>
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -90,6 +91,8 @@ toString(
 	const node::processor< T, B >& processor
   )
 { 
+  throw std::runtime_error( "Unimplemented" );
+  return ""; 
 }
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////

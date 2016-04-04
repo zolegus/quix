@@ -351,6 +351,8 @@ toString(
   const transport::mcd< E >& processor
   )
 { 
+  throw std::runtime_error( "Unimplemented" );
+  return ""; 
 }
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////

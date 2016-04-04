@@ -9,6 +9,8 @@
 #include <behaviour/file_write.hh>
 #include <types/buffer.hh>
 #include <fstream>
+#include <iostream>
+#include <stdexcept>
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -18,6 +20,7 @@ struct behaviour::file_write< E >::impl
   using event_type = E;
 
 	std::ofstream file;
+	bool again_mem{ true };
 
   impl( const std::string& );
   void operator()( event_type&);
@@ -32,7 +35,7 @@ behaviour::file_write< E >::impl::impl(
   )
   : file( filename_arg )
 {
-  return;
+  file.exceptions( std::ifstream::badbit | std::ifstream::failbit );
 }
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -43,8 +46,14 @@ behaviour::file_write< E >::impl::operator()(
   event_type &event 
   )
 {
-	auto buffer = event.buffer_mem;
-  file.write( buffer->data, buffer->size );
+  if( event.buffer_mem->size )
+		{
+	  std::cout << "\"" << std::string( event.buffer_mem->data, event.buffer_mem->size ) << "\"\n";
+    file.write( event.buffer_mem->data, event.buffer_mem->size );
+    file.put( '\n' );
+		}
+  else
+    again_mem = false;
 }
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -53,14 +62,13 @@ template< typename E >
 bool
 behaviour::file_write< E >::impl::post()
 {
-  return true;
+  return again_mem;
 }
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
 template< typename E >
 behaviour::file_write< E >::file_write(
-  void*,
 	const std::string &filename_arg
   )
   : pimpl( new impl( filename_arg ) )
@@ -104,6 +112,8 @@ toString(
   const behaviour::file_write< E >& file_write_arg
   )
 { 
+  throw std::runtime_error( "Unimplemented" );
+  return ""; 
 }
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////

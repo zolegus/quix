@@ -275,6 +275,8 @@ toString(
   const transport::dual< E >& processor
   )
 { 
+  throw std::runtime_error( "Unimplemented" );
+  return ""; 
 }
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////

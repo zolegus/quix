@@ -103,6 +103,8 @@ toString(
   const behaviour::event_consume< E >& event_consume_arg
   )
 { 
+  throw std::runtime_error( "Unimplemented" );
+  return ""; 
 }
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
