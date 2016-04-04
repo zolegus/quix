@@ -25,7 +25,6 @@ void *init_behaviour( void *raw )
 
   int socket_port = get_argument_as_int( 'p' );
 
-  // Open socket for sending
   struct sockaddr_in servaddr;
   bzero(&servaddr,sizeof(servaddr));
 	servaddr.sin_family = AF_INET;
