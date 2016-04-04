@@ -6,6 +6,7 @@
 #include <string>
 #include <unordered_map>
 #include <utility>
+#include <stdexcept>
 #include <sstream>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -105,6 +106,8 @@ toString(
   const utility::daemon& d
   )
 { 
+  throw std::runtime_error( "Unimplemented" );
+  return ""; 
 }
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
