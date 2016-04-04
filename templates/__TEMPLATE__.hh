@@ -12,8 +12,8 @@
 //
 class __NAMESPACE__::__CLASS__
 {
-  struct Impl;
-  Impl *pimpl;
+  struct impl;
+  impl *pimpl;
 
 public:
 

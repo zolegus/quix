@@ -3,17 +3,18 @@
 //
 #include <__NAMESPACE__/__CLASS__.hpp>
 #include <utility>
+#include <stdexcept>
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
-struct __NAMESPACE__::__CLASS__::Impl
+struct __NAMESPACE__::__CLASS__::impl
 {
 };
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
 __NAMESPACE__::__CLASS__::__CLASS__(
-  ) : pimpl( new Impl )
+  ) : pimpl( new impl )
 {
   return;
 }
@@ -23,7 +24,7 @@ __NAMESPACE__::__CLASS__::__CLASS__(
 __NAMESPACE__::__CLASS__::__CLASS__(
   const __CLASS__& other
   ) 
-  : pimpl( new Impl( *other.pimpl ) )
+  : pimpl( new impl( *other.pimpl ) )
 {
   return;
 }
@@ -70,9 +71,11 @@ __NAMESPACE__::__CLASS__::~__CLASS__()
 //
 std::string
 toString(
-  const __NAMESPACE__::__CLASS__& __CLASS__arg
+  const __NAMESPACE__::__CLASS__& __CLASS___arg
   )
-{ 
+{
+  throw std::runtime_error( "Unimplemented" );
+  return ""; 
 }
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
