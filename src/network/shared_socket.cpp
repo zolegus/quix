@@ -1,0 +1,76 @@
+//
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//
+#include <network/shared_socket.hpp>
+#include <network/socket_listening.hpp>
+#include <network/socket_connected.hpp>
+#include <network/address_inet.hpp>
+#include <network/address_unix.hpp>
+#include <utility>
+#include <stdexcept>
+//
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//
+struct network::shared_socket::impl
+{
+  socket_connected< address_unix > connected_unix;
+
+  impl( const std::string& );
+};
+//
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//
+network::shared_socket::impl::impl(
+  const std::string &listening_unix_arg
+  )
+  : connected_unix( socket_listening< address_unix >( listening_unix_arg ).accept() )
+{
+  return;
+}
+//
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//
+network::shared_socket::shared_socket(
+  const std::string& listening_unix_arg
+  )
+  : pimpl( 
+			new impl(
+        listening_unix_arg
+				) 
+      )
+{
+  return;
+}
+//
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//
+network::shared_socket::~shared_socket()
+{
+  delete pimpl;
+}
+//
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//
+network::shared_socket::socket_type_ptr
+network::shared_socket::operator()()
+{
+  return std::make_shared< socket_type >( 
+    pimpl->connected_unix.recv_fd_checked( 
+      0xCAFEBABEDEADBEEF 
+      ) 
+    );
+}
+//
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//
+std::string
+toString(
+  const network::shared_socket& shared_socketarg
+  )
+{ 
+  throw std::runtime_error( "Unimplemented" );
+  return ""; 
+}
+//
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//
