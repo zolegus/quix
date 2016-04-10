@@ -1,33 +1,33 @@
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
-#ifndef GUARD__MANAGER__DESTINATION__HH
-#define GUARD__MANAGER__DESTINATION__HH
+#ifndef GUARD__BEHAVIOUR__DESTINATION_MANAGER__HH
+#define GUARD__BEHAVIOUR__DESTINATION_MANAGER__HH
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
-#include <manager/destination.h>
+#include <behaviour/destination_manager.h>
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
-class manager::destination
+class manager::destination_manager
 {
   struct impl;
   impl *pimpl;
 
 public:
 
-  destination();
-  destination( const destination& );
-  destination( destination&& );
-  destination& operator=( destination );
-  destination& operator=( destination&& );
-  ~destination();
+  destination_manager();
+  destination_manager( const destination_manager& );
+  destination_manager( destination_manager&& );
+  destination_manager& operator=( destination_manager );
+  destination_manager& operator=( destination_manager&& );
+  ~destination_manager();
 };
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
-#endif // GUARD__MANAGER__DESTINATION__HH
+#endif // GUARD__BEHAVIOUR__DESTINATION_MANAGER__HH
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //

@@ -1,19 +1,19 @@
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
-#include <manager/product.hpp>
+#include <behaviour/product_manager.hpp>
 #include <stdexcept>
 #include <utility>
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
-struct manager::product::impl
+struct manager::product_manager::impl
 {
 };
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
-manager::product::product()
+manager::product_manager::product_manager()
   : pimpl( new impl )
 {
   return;
@@ -21,8 +21,8 @@ manager::product::product()
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
-manager::product::product(
-  const product& other
+manager::product_manager::product_manager(
+  const product_manager& other
   ) 
   : pimpl( new impl( *other.pimpl ) )
 {
@@ -31,8 +31,8 @@ manager::product::product(
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
-manager::product::product(
-  product&& other
+manager::product_manager::product_manager(
+  product_manager&& other
   ) : pimpl( other.pimpl )
 {
   other.pimpl = nullptr;
@@ -40,9 +40,9 @@ manager::product::product(
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
-manager::product&
-manager::product::operator=(
-  product other
+manager::product_manager&
+manager::product_manager::operator=(
+  product_manager other
   )
 {
   std::swap( pimpl, other.pimpl );
@@ -51,9 +51,9 @@ manager::product::operator=(
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
-manager::product&
-manager::product::operator=(
-  product&& other
+manager::product_manager&
+manager::product_manager::operator=(
+  product_manager&& other
   )
 {
   std::swap( pimpl, other.pimpl );
@@ -62,7 +62,7 @@ manager::product::operator=(
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
-manager::product::~product()
+manager::product_manager::~product_manager()
 {
   delete pimpl;
 }
@@ -71,7 +71,7 @@ manager::product::~product()
 //
 std::string
 toString(
-  const manager::product& product_arg
+  const manager::product_manager& product_manager_arg
   )
 { 
   throw std::runtime_error( "Unimplemented" );

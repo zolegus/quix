@@ -1,33 +1,33 @@
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
-#ifndef GUARD__MANAGER__PRODUCT__HH
-#define GUARD__MANAGER__PRODUCT__HH
+#ifndef GUARD__BEHAVIOUR__CLIENT_MANAGER__HH
+#define GUARD__BEHAVIOUR__CLIENT_MANAGER__HH
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
-#include <manager/product.h>
+#include <behaviour/client_manager.h>
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
-class manager::product
+class manager::client_manager
 {
   struct impl;
   impl *pimpl;
 
 public:
 
-  product();
-  product( const product& );
-  product( product&& );
-  product& operator=( product );
-  product& operator=( product&& );
-  ~product();
+  client_manager();
+  client_manager( const client_manager& );
+  client_manager( client_manager&& );
+  client_manager& operator=( client_manager );
+  client_manager& operator=( client_manager&& );
+  ~client_manager();
 };
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
-#endif // GUARD__MANAGER__PRODUCT__HH
+#endif // GUARD__BEHAVIOUR__CLIENT_MANAGER__HH
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //

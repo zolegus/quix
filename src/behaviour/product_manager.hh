@@ -1,33 +1,33 @@
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
-#ifndef GUARD__MANAGER__ORDER__HH
-#define GUARD__MANAGER__ORDER__HH
+#ifndef GUARD__BEHAVIOUR__PRODUCT_MANAGER__HH
+#define GUARD__BEHAVIOUR__PRODUCT_MANAGER__HH
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
-#include <manager/order.h>
+#include <behaviour/product_manager.h>
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
-class manager::order
+class manager::product_manager
 {
   struct impl;
   impl *pimpl;
 
 public:
 
-  order();
-  order( const order& );
-  order( order&& );
-  order& operator=( order );
-  order& operator=( order&& );
-  ~order();
+  product_manager();
+  product_manager( const product_manager& );
+  product_manager( product_manager&& );
+  product_manager& operator=( product_manager );
+  product_manager& operator=( product_manager&& );
+  ~product_manager();
 };
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
-#endif // GUARD__ORDERMANAGER__HH
+#endif // GUARD__BEHAVIOUR__PRODUCT_MANAGER__HH
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //

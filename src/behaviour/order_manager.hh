@@ -1,33 +1,33 @@
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
-#ifndef GUARD__MANAGER__CLIENT__HH
-#define GUARD__MANAGER__CLIENT__HH
+#ifndef GUARD__BEHAVIOUR__ORDER_MANAGER__HH
+#define GUARD__BEHAVIOUR__ORDER_MANAGER__HH
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
-#include <manager/client.h>
+#include <behaviour/order_manager.h>
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
-class manager::client
+class manager::order_manager
 {
   struct impl;
   impl *pimpl;
 
 public:
 
-  client();
-  client( const client& );
-  client( client&& );
-  client& operator=( client );
-  client& operator=( client&& );
-  ~client();
+  order_manager();
+  order_manager( const order_manager& );
+  order_manager( order_manager&& );
+  order_manager& operator=( order_manager );
+  order_manager& operator=( order_manager&& );
+  ~order_manager();
 };
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
-#endif // GUARD__MANAGER__CLIENT__HH
+#endif // GUARD__ORDER_MANAGERMANAGER__HH
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //

@@ -1,19 +1,19 @@
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
-#include <manager/client.hpp>
+#include <behaviour/destination_manager.hpp>
 #include <stdexcept>
 #include <utility>
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
-struct manager::client::impl
+struct manager::destination_manager::impl
 {
 };
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
-manager::client::client()
+manager::destination_manager::destination_manager()
   : pimpl( new impl )
 {
   return;
@@ -21,8 +21,8 @@ manager::client::client()
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
-manager::client::client(
-  const manager::client& other
+manager::destination_manager::destination_manager(
+  const manager::destination_manager& other
   ) 
   : pimpl( new impl( *other.pimpl ) )
 {
@@ -31,8 +31,8 @@ manager::client::client(
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
-manager::client::client(
-  manager::client&& other
+manager::destination_manager::destination_manager(
+  manager::destination_manager&& other
   ) : pimpl( other.pimpl )
 {
   other.pimpl = nullptr;
@@ -40,9 +40,9 @@ manager::client::client(
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
-manager::client&
-manager::client::operator=(
-  manager::client other
+manager::destination_manager&
+manager::destination_manager::operator=(
+  manager::destination_manager other
   )
 {
   std::swap( pimpl, other.pimpl );
@@ -51,9 +51,9 @@ manager::client::operator=(
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
-manager::client&
-manager::client::operator=(
-  manager::client&& other
+manager::destination_manager&
+manager::destination_manager::operator=(
+  manager::destination_manager&& other
   )
 {
   std::swap( pimpl, other.pimpl );
@@ -62,7 +62,7 @@ manager::client::operator=(
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
-manager::client::~client()
+manager::destination_manager::~destination_manager()
 {
   delete pimpl;
 }
@@ -71,7 +71,7 @@ manager::client::~client()
 //
 std::string
 toString(
-  const manager::client& processor
+  const manager::destination_manager& processor
   )
 { 
   throw std::runtime_error( "Unimplemented" );
