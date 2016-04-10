@@ -95,6 +95,7 @@ struct scenarios
   scenarios()
   {
  		basic_three_stage_sequence();
+		basic_three_stage_sequence_with_batching();
   }
 
   void basic_three_stage_sequence()
@@ -115,6 +116,58 @@ struct scenarios
     uint64_t &value3 = terminator.reaquire();
     PASSES( value2 == value3 );
 		terminator.release();
+	}
+
+  void basic_three_stage_sequence_with_batching()
+	{
+    transport_type injector( (void*)data, 1, {3} );
+    transport_type processor( (void*)data, 2, {1} );
+    transport_type terminator( (void*)data, 3, {2} );
+
+    uint64_t &value11 = injector.aquire();
+    value11 = 11;
+
+    uint64_t &value12 = injector.aquire();
+    value12 = 12;
+
+    uint64_t &value13 = injector.aquire();
+    value13 = 13;
+
+    injector.commit();
+    injector.commit();
+    injector.commit();
+    CATCH( processor.commit(), std::runtime_error, "commit called on event that was not aquired" );
+			
+    uint64_t &value21 = processor.reaquire();
+    PASSES( value11 == value21 );
+		value21 = 21;
+
+    uint64_t &value22 = processor.reaquire();
+    PASSES( value12 == value22 );
+		value22 = 22;
+
+    uint64_t &value23 = processor.reaquire();
+    PASSES( value13 == value23 );
+		value23 = 23;
+
+    processor.commit();
+    processor.commit();
+    processor.commit();
+    CATCH( processor.commit(), std::runtime_error, "commit called on event that was not aquired" );
+			
+    uint64_t &value31 = terminator.reaquire();
+    PASSES( value21 == value31 );
+
+    uint64_t &value32 = terminator.reaquire();
+    PASSES( value22 == value32 );
+
+    uint64_t &value33 = terminator.reaquire();
+    PASSES( value23 == value33 );
+
+		terminator.release();
+		terminator.release();
+		terminator.release();
+    CATCH( terminator.release(), std::runtime_error, "release called on event that was not aquired" );
 	}
 }
 scenarios;

@@ -40,7 +40,7 @@ struct transport::lwd< E >::impl
 	{
 		types::cacheline< data_type* > base_address;
 
-		using meta_type  = types::cacheline< uint64_t >[ max_node_count ];
+		using meta_type  = types::cacheline< uint64_t >[ max_node_count ][ 2 ];
 		meta_type meta_mem;
 
 	  using pool_type = types::cacheline< event_type >[ pool_slot_count ];
@@ -89,7 +89,7 @@ transport::lwd< E >::impl::impl(
     if( followed_node && followed_node > max_node_count || followed_node == node_id_mem )
       throw std::runtime_error( "Invalid follower id" );
 
-    consumed_value_ptr[ i++ ] = &meta_mem[ followed_node ].value;
+    consumed_value_ptr[ i++ ] = &meta_mem[ followed_node ][ 0 ].value;
 	}
   consumed_value_ptr[ i++ ] = 0;
 }
@@ -101,7 +101,7 @@ inline
 bool
 transport::lwd< E >::impl::aquire_test()
 {
-  register uint64_t next_slot = meta_mem[ node_id_mem ] + 1  & pool_mask ;
+  register uint64_t next_slot = meta_mem[ node_id_mem ][ 1 ] + 1  & pool_mask ;
   uint64_t *volatile *walker = ( uint64_t *volatile * )consumed_value_ptr;
 
   do
@@ -122,7 +122,7 @@ inline
 E&
 transport::lwd< E >::impl::aquire()
 {
-  register uint64_t next_slot = meta_mem[ node_id_mem ].value + 1 & pool_mask;
+  register uint64_t next_slot = meta_mem[ node_id_mem ][ 1 ].value + 1 & pool_mask;
   uint64_t *volatile *walker = ( uint64_t *volatile * )consumed_value_ptr;
 
   do
@@ -132,7 +132,8 @@ transport::lwd< E >::impl::aquire()
  	}
   while( *( ++walker ) );
 
-  register uint64_t node_slot = meta_mem[ node_id_mem ].value & pool_mask;
+  register uint64_t node_slot = meta_mem[ node_id_mem ][ 1 ].value & pool_mask;
+  ++meta_mem[ node_id_mem ][ 1 ].value;
   return pool_mem[ node_slot ].value;
 }
 //
@@ -143,8 +144,10 @@ inline
 void 
 transport::lwd< E >::impl::commit()
 {
+  if( meta_mem[ node_id_mem ][ 0 ].value == meta_mem[ node_id_mem ][ 1 ].value )
+    throw std::runtime_error( "commit called on event that was not aquired" );
   BARRIER;
-  ++meta_mem[ node_id_mem ].value;
+  ++meta_mem[ node_id_mem ][ 0 ].value;
 }
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -154,7 +157,7 @@ inline
 bool
 transport::lwd< E >::impl::reaquire_test()
 {
-  register uint64_t node_slot = meta_mem[ node_id_mem ].value & pool_mask;
+  register uint64_t node_slot = meta_mem[ node_id_mem ][ 1 ].value & pool_mask;
   uint64_t *volatile *walker = ( uint64_t *volatile * )consumed_value_ptr;
 
   do
@@ -173,7 +176,7 @@ inline
 E&
 transport::lwd< E >::impl::reaquire()
 {
-  register uint64_t node_slot = meta_mem[ node_id_mem ].value & pool_mask;
+  register uint64_t node_slot = meta_mem[ node_id_mem ][ 1 ].value & pool_mask;
   uint64_t *volatile  *walker = ( uint64_t *volatile * )consumed_value_ptr;
 
   do
@@ -183,6 +186,7 @@ transport::lwd< E >::impl::reaquire()
   }
 	while( *( ++walker ) );
 
+  ++meta_mem[ node_id_mem ][ 1 ].value;
   return pool_mem[ node_slot ].value;
 }
 //
@@ -193,8 +197,10 @@ inline
 void 
 transport::lwd< E >::impl::release()
 {
+  if( meta_mem[ node_id_mem ][ 0 ].value == meta_mem[ node_id_mem ][ 1 ].value )
+    throw std::runtime_error( "release called on event that was not aquired" );
   BARRIER;
-  ++meta_mem[ node_id_mem ].value;
+  ++meta_mem[ node_id_mem ][ 0 ].value;
 }
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
