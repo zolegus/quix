@@ -108,26 +108,54 @@ struct scenarios
     transport_type processor(  (void*)meta, 2,    {{1,1}} );
     transport_type terminator( (void*)meta, 3,    {{2,1}} );
 
+
     PASSES( injector.aquire_test() == true );
+    PASSES( injector.reaquire_test() == false );
+    CATCH( injector.reaquire(), std::runtime_error, "reaquire called by an injector" );
+    CATCH( injector.commit(), std::runtime_error, "commit called before aquire/reaquire" );
+    CATCH( injector.release(), std::runtime_error, "release called before aquire/reaquire" );
     int &value1 = injector.aquire();
+    PASSES( injector.aquire_test() == false );
+    CATCH( injector.aquire(), std::runtime_error, "aquire called before current released/committed" );
+    CATCH( injector.reaquire(), std::runtime_error, "reaquire called before current released/committed" );
     value1 = 10;
     int *value1addr = &value1;
     injector.commit();
+    CATCH( injector.commit(), std::runtime_error, "commit called before aquire/reaquire" );
+    CATCH( injector.release(), std::runtime_error, "release called before aquire/reaquire" );
 
+    PASSES( processor.aquire_test() == false );
     PASSES( processor.reaquire_test() == true );
+    CATCH( processor.aquire(), std::runtime_error, "aquire called when not an injector" );
+    CATCH( processor.commit(), std::runtime_error, "commit called before aquire/reaquire" );
+    CATCH( processor.release(), std::runtime_error, "release called before aquire/reaquire" );
     int &value2 = processor.reaquire();
+    PASSES( processor.reaquire_test() == false );
+    CATCH( processor.aquire(), std::runtime_error, "aquire called before current released/committed" );
+    CATCH( processor.reaquire(), std::runtime_error, "reaquire called before current released/committed" );
     PASSES( value1 == value2 );
     int *value2addr = &value2;
     PASSES( value1addr == value2addr );
 		value2 = 20;
     processor.commit();
+    CATCH( processor.commit(), std::runtime_error, "commit called before aquire/reaquire" );
+    CATCH( processor.release(), std::runtime_error, "release called before aquire/reaquire" );
 
+    PASSES( terminator.aquire_test() == false );
     PASSES( terminator.reaquire_test() == true );
+    CATCH( terminator.aquire(), std::runtime_error, "aquire called when not an injector" );
+    CATCH( terminator.commit(), std::runtime_error, "commit called before aquire/reaquire" );
+    CATCH( terminator.release(), std::runtime_error, "release called before aquire/reaquire" );
     int &value3 = terminator.reaquire();
+    PASSES( terminator.reaquire_test() == false );
+    CATCH( terminator.aquire(), std::runtime_error, "aquire called before current released/committed" );
+    CATCH( terminator.reaquire(), std::runtime_error, "reaquire called before current released/committed" );
     PASSES( value2 == value3 );
     int *value3addr = &value3;
     PASSES( value2addr == value3addr );
 		terminator.release();
+    CATCH( terminator.commit(), std::runtime_error, "commit called before aquire/reaquire" );
+    CATCH( terminator.release(), std::runtime_error, "release called before aquire/reaquire" );
 	}
 
   void basic_dual_channel_cross_sequence()

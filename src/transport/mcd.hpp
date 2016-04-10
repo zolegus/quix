@@ -38,7 +38,7 @@ struct transport::mcd< E >::impl
   using event_type = E;
 
   struct data_type
-	{
+ {
 		types::cacheline< data_type* > base_address;
 
 		using meta_type  = types::cacheline< uint64_t >[ max_node_count ][ max_channel_count ];
@@ -51,9 +51,9 @@ struct transport::mcd< E >::impl
   typename data_type::meta_type &meta_mem;
   typename data_type::pool_type &pool_mem;
   const node_id_type node_id_mem;
-  injector_channel_type injector_channel_mem{ 0 };
-  unsigned int channel_mem{ 0 };
-  unsigned int walked_mem{ 0 };
+  injector_channel_type injector_channel_mem{ -1 };
+  int channel_mem{ -1 };
+  int walked_mem{ 0 };
   alignas( 64 ) uint64_t *followed_ptr_mem[ max_channel_count ][ max_follower_count ];
   alignas( 64 ) uint64_t cursor_mem[ max_channel_count ];
   alignas( 64 ) uint64_t *sequence_ptr_mem[ max_channel_count ];
@@ -139,6 +139,9 @@ template< typename E >
 inline bool
 transport::mcd< E >::impl::aquire_test()
 {
+  if( channel_mem != -1 ) return false;
+  if( injector_channel_mem == -1 ) return false;
+
 	std::memcpy( walker_ptr_mem, internal_ptr_mem, sizeof( walker_ptr_mem[0] ) * walked_mem );
   for( int channel = 0 ; channel < walked_mem ;  )
   {
@@ -156,6 +159,9 @@ inline
 E&
 transport::mcd< E >::impl::aquire()
 {
+  if( channel_mem != -1 ) throw std::runtime_error( "aquire called before current released/committed" );
+  if( injector_channel_mem == -1 ) throw std::runtime_error( "aquire called when not an injector" );
+
 	std::memcpy( walker_ptr_mem, internal_ptr_mem, sizeof( walker_ptr_mem[0] ) * walked_mem );
   do
   {
@@ -177,8 +183,11 @@ inline
 void 
 transport::mcd< E >::impl::commit()
 {
+  if( channel_mem == -1 ) throw std::runtime_error( "commit called before aquire/reaquire" );
+
   BARRIER;
   cursor_mem[ channel_mem ] = ( ++( *sequence_ptr_mem[ channel_mem ] ) & pool_mask );
+  channel_mem = -1;
 }
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -188,6 +197,9 @@ inline
 bool
 transport::mcd< E >::impl::reaquire_test()
 {
+  if( channel_mem != -1 ) return false;
+  if( injector_channel_mem != -1 ) return false;
+
 	std::memcpy( walker_ptr_mem, internal_ptr_mem, sizeof( walker_ptr_mem[0] ) * walked_mem );
   for( int channel = 0 ; channel < walked_mem ;  )
   {
@@ -205,6 +217,9 @@ inline
 E&
 transport::mcd< E >::impl::reaquire()
 {
+  if( channel_mem != -1 ) throw std::runtime_error( "reaquire called before current released/committed" );
+  if( injector_channel_mem != -1 ) throw std::runtime_error( "reaquire called by an injector" );
+
 	std::memcpy( walker_ptr_mem, internal_ptr_mem, sizeof( walker_ptr_mem[0] ) * walked_mem );
   do
   {
@@ -226,8 +241,11 @@ inline
 void
 transport::mcd< E >::impl::release()
 {
+  if( channel_mem == -1 ) throw std::runtime_error( "release called before aquire/reaquire" );
+
   BARRIER;
   cursor_mem[ channel_mem ] = ( ++( *sequence_ptr_mem[ channel_mem ] ) & pool_mask );
+  channel_mem = -1;
 }
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
