@@ -52,17 +52,17 @@ Transport interface comprises of 6 functions
 Currently there are 4 transports implemented
 * **uni**: A simple pointer handoff transport.  Like an event queue of one.
 * **dual**: A simple pointer handoff transport with tick-tock.  Like an event queue of two.
-* **lwd**:  Inspired by the discruptor pattern but made much more lightweight.  One injector only.
+* **lwd**:  Inspired by the disruptor pattern but made much more lightweight.  One injector only.
 * **mcd**:  Extension of the lwd to allow muliple channels.  One injector per channel only.
  
 Under load I got the following timings on a quad core Haswell Xeon.  
 Results are for 1 billion events sent from an injector to a terminator (one hop).
-*  **uni**: 100s approx.  Expect will drop in an unloaded environment.
-*  **dual**: 60s approx.  Expect will drop in an unloaded environment.
-*  **lwd**: 15s approx.  Best results but unsuitable for complex topologies.
-*  **mcd**: 30s approx.  Expect will rises with more channels
+*  **uni**: 100s approx or 100ns per event.  Expect will drop in an unloaded environment.
+*  **dual**: 60s approx or 60ns per event.  Expect will drop in an unloaded environment.
+*  **lwd**: 15s approx or 15ns per event.  Best results but unsuitable for complex topologies.
+*  **mcd**: 30s approx or 30ns per event.  Expect will rises with more channels.
   
-Quix will be implemented using the mcd transport.  However transports are swappable so future performance testing might show uni or dual to have better results.  This is based on the view that simpler leads to lower latencies (mostly) and uni/dual are simpler than mcd.
+Quix will be implemented using the mcd transport.  However transports are swapable so future performance testing might show uni or dual to have better results.  This is based on the view that simpler leads to lower latencies (mostly) and uni/dual are simpler than mcd.
 
 The mcd transport allows for complicated topologies by having nodes follow muliple channels such as:
 ```
@@ -74,7 +74,7 @@ In the above ExchangeManager is following both N7:request_enrich on channel 1 an
 
 ##Behaviour
 
-Each node has a behaviour bound to it.  At its core a behaviour is nothing more than a functor that takes the event as an argument and returns it to the caller when done.  The collection of behaviours bound to the active nodes defines what the system can do.
+Each node has a behaviour bound to it.  The essence of a behaviour is nothing more than a functor that takes the event as an argument and returns it to the caller when done.  The collection of behaviours bound to the active nodes defines what the system can do.
 
 Currently the follow behaviours are implemented.
 *  **event_publish**: Used to inject empty events into the transport for performance testing.
@@ -89,7 +89,7 @@ The following behaviours are started but yet to be completed.
 *  **fix_decoder**: Decode a fix message into a form more friendly to the following node.
 *  **fix_encoder**: Encode a fix message from the form that is ore friendly to the nodes being followed.
   
-The following behaviours are not yet implemented.
+The following behaviours are not yet event started but have placeholder files created.
 *  **client_manager**: Event enrichment related to the client.
 *  **destination_manager**: Event enrichment related to the destination.
 *  **order_manager**: Event enrichment related to the order.
