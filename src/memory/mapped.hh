@@ -25,8 +25,8 @@ public:
   mapped& operator=( mapped&& ) = delete;
   ~mapped();
 
-  void *data( const std::size_t );
-	std::size_t size( const std::size_t );
+  void *data( const std::size_t = 0 );
+	std::size_t size( const std::size_t = 0 );
 };
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
