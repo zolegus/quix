@@ -109,12 +109,12 @@ struct scenarios
     injector.commit();
 
     uint64_t &value2 = processor.reaquire();
-    PASSES( value1 == value2 );
+    CHECK( value1 == value2 );
 		value2 = 20;
     processor.commit();
 
     uint64_t &value3 = terminator.reaquire();
-    PASSES( value2 == value3 );
+    CHECK( value2 == value3 );
 		terminator.release();
 	}
 
@@ -139,15 +139,15 @@ struct scenarios
     CATCH( processor.commit(), std::runtime_error, "commit called on event that was not aquired" );
 			
     uint64_t &value21 = processor.reaquire();
-    PASSES( value11 == value21 );
+    CHECK( value11 == value21 );
 		value21 = 21;
 
     uint64_t &value22 = processor.reaquire();
-    PASSES( value12 == value22 );
+    CHECK( value12 == value22 );
 		value22 = 22;
 
     uint64_t &value23 = processor.reaquire();
-    PASSES( value13 == value23 );
+    CHECK( value13 == value23 );
 		value23 = 23;
 
     processor.commit();
@@ -156,13 +156,13 @@ struct scenarios
     CATCH( processor.commit(), std::runtime_error, "commit called on event that was not aquired" );
 			
     uint64_t &value31 = terminator.reaquire();
-    PASSES( value21 == value31 );
+    CHECK( value21 == value31 );
 
     uint64_t &value32 = terminator.reaquire();
-    PASSES( value22 == value32 );
+    CHECK( value22 == value32 );
 
     uint64_t &value33 = terminator.reaquire();
-    PASSES( value23 == value33 );
+    CHECK( value23 == value33 );
 
 		terminator.release();
 		terminator.release();

@@ -118,26 +118,26 @@ struct api
   {
 		utility::configuration cfg( make_setting_stringstream( 2, 2, 2, 2 ) );
 
-    PASSES( cfg[ "skey1" ] == "value1" );
-    PASSES( cfg[ "skey2" ] == "value2" );
+    CHECK( cfg[ "skey1" ] == "value1" );
+    CHECK( cfg[ "skey2" ] == "value2" );
     CATCH( cfg[ "skey3" ] == "value3", 
            std::invalid_argument, 
            "skey3 not found in configuration" );
 
-    PASSES( cfg[ "ikey1" ] == "1" );
-    PASSES( cfg[ "ikey2" ] == "2" );
+    CHECK( cfg[ "ikey1" ] == "1" );
+    CHECK( cfg[ "ikey2" ] == "2" );
     CATCH( cfg[ "ikey3" ] == "3", 
            std::invalid_argument, 
            "ikey3 not found in configuration" );
 
-    PASSES( cfg[ "vkey1" ] == "1" );
-    PASSES( cfg[ "vkey2" ] == "1,2" );
+    CHECK( cfg[ "vkey1" ] == "1" );
+    CHECK( cfg[ "vkey2" ] == "1,2" );
     CATCH( cfg[ "vkey3" ] == "1,2,3", 
            std::invalid_argument, 
            "vkey3 not found in configuration" );
 
-    PASSES( cfg[ "pkey1" ] == "1.2" );
-    PASSES( cfg[ "pkey2" ] == "1.2,2.3" );
+    CHECK( cfg[ "pkey1" ] == "1.2" );
+    CHECK( cfg[ "pkey2" ] == "1.2,2.3" );
     CATCH( cfg[ "pkey3" ] == "1.2,2.3,3.4", 
            std::invalid_argument, 
            "pkey3 not found in configuration" );
@@ -147,35 +147,35 @@ struct api
 	{
 		utility::configuration cfg( make_setting_stringstream( 2, 2, 2, 2 ) );
 
-    PASSES( cfg.get< std::string >( "skey1" ) == "value1" );
-    PASSES( cfg.get< std::string >( "skey2" ) == "value2" );
+    CHECK( cfg.get< std::string >( "skey1" ) == "value1" );
+    CHECK( cfg.get< std::string >( "skey2" ) == "value2" );
     CATCH( cfg.get< std::string >( "skey3" ) == "value3", 
            std::invalid_argument, 
            "skey3 not found in configuration" );
 
-    PASSES( cfg.get< std::size_t >( "ikey1" ) == 1 );
-    PASSES( cfg.get< std::size_t >( "ikey2" ) == 2 );
+    CHECK( cfg.get< std::size_t >( "ikey1" ) == 1 );
+    CHECK( cfg.get< std::size_t >( "ikey2" ) == 2 );
     CATCH( cfg.get< std::size_t >( "ikey3" ) == 3, 
            std::invalid_argument, 
            "ikey3 not found in configuration" );
 
     using vec = std::vector< unsigned int >;
-		PASSES( cfg.get< vec >( "vkey1" ).size() == 1 );
-		PASSES( cfg.get< vec >( "vkey1" )[ 0 ] == 1 );
- 	  PASSES( cfg.get< vec >( "vkey2" ).size() == 2 );
- 	  PASSES( cfg.get< vec >( "vkey2" )[ 0 ] == 1 );
- 	  PASSES( cfg.get< vec >( "vkey2" )[ 1 ] == 2 );
+		CHECK( cfg.get< vec >( "vkey1" ).size() == 1 );
+		CHECK( cfg.get< vec >( "vkey1" )[ 0 ] == 1 );
+ 	  CHECK( cfg.get< vec >( "vkey2" ).size() == 2 );
+ 	  CHECK( cfg.get< vec >( "vkey2" )[ 0 ] == 1 );
+ 	  CHECK( cfg.get< vec >( "vkey2" )[ 1 ] == 2 );
     CATCH( cfg.get< vec >( "vkey3" ).size() == 3, std::invalid_argument, "vkey3 not found in configuration" );
 
     using pvec = std::vector< std::pair< unsigned int, unsigned int > >;
-		PASSES( cfg.get< pvec>( "pkey1" ).size() == 1 );
-		PASSES( cfg.get< pvec>( "pkey1" )[ 0 ].first == 1 );
-		PASSES( cfg.get< pvec>( "pkey1" )[ 0 ].second == 2 );
-  	PASSES( cfg.get< pvec >( "pkey2" ).size() == 2 );
-  	PASSES( cfg.get< pvec >( "pkey2" )[ 0 ].first == 1 );
-  	PASSES( cfg.get< pvec >( "pkey2" )[ 0 ].second == 2 );
-  	PASSES( cfg.get< pvec >( "pkey2" )[ 1 ].first == 2 );
-  	PASSES( cfg.get< pvec >( "pkey2" )[ 1 ].second == 3 );
+		CHECK( cfg.get< pvec>( "pkey1" ).size() == 1 );
+		CHECK( cfg.get< pvec>( "pkey1" )[ 0 ].first == 1 );
+		CHECK( cfg.get< pvec>( "pkey1" )[ 0 ].second == 2 );
+  	CHECK( cfg.get< pvec >( "pkey2" ).size() == 2 );
+  	CHECK( cfg.get< pvec >( "pkey2" )[ 0 ].first == 1 );
+  	CHECK( cfg.get< pvec >( "pkey2" )[ 0 ].second == 2 );
+  	CHECK( cfg.get< pvec >( "pkey2" )[ 1 ].first == 2 );
+  	CHECK( cfg.get< pvec >( "pkey2" )[ 1 ].second == 3 );
     CATCH( cfg.get< pvec >( "pkey3" ).size() == 3, std::invalid_argument, "pkey3 not found in configuration" );
 	}
 }

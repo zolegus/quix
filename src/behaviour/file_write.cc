@@ -72,11 +72,11 @@ struct api
 		{
 			std::getline( fs, input );
 			std::cout << line << " == " << input << "\n";
-		  PASSES( line == input );
+		  CHECK( line == input );
 		}
 		std::getline( fs, input );
-	  PASSES( input.size() == 0 );
-	  PASSES( fs.eof() );
+	  CHECK( input.size() == 0 );
+	  CHECK( fs.eof() );
   }
 }
 api;

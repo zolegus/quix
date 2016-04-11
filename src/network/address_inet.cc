@@ -50,11 +50,11 @@ struct api
     sa.sin_addr.s_addr = inet_addr( "localhost" );
     sa.sin_port = htons( 12345 );
 
-    PASSES( address.addr()->sa_family == reinterpret_cast< struct sockaddr& >( sa ).sa_family );
+    CHECK( address.addr()->sa_family == reinterpret_cast< struct sockaddr& >( sa ).sa_family );
     const struct sockaddr_in *address_ptr = reinterpret_cast< const struct sockaddr_in* >( address.addr() ) ;
-    PASSES( address_ptr->sin_family == sa.sin_family );
-    PASSES( address_ptr->sin_addr.s_addr == sa.sin_addr.s_addr );
-    PASSES( address_ptr->sin_port == sa.sin_port );
+    CHECK( address_ptr->sin_family == sa.sin_family );
+    CHECK( address_ptr->sin_addr.s_addr == sa.sin_addr.s_addr );
+    CHECK( address_ptr->sin_port == sa.sin_port );
   }
 
   void size()
@@ -62,7 +62,7 @@ struct api
 		std::string address_arg( "localhost:12345" );
 		network::address_inet address( address_arg );
 
-    PASSES( address.size() == sizeof( sockaddr_in ) );
+    CHECK( address.size() == sizeof( sockaddr_in ) );
   }
 }
 api;

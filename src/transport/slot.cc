@@ -59,9 +59,9 @@ struct scenarios
     transport_type processor( (void*)data, 2, {1} );
 		{
       auto slot = transport::make_reaquire_commit_slot( processor );
-      PASSES( slot->id == 1 );
-      PASSES( slot->key == 22 );
-      PASSES( slot->data == 3333 );
+      CHECK( slot->id == 1 );
+      CHECK( slot->key == 22 );
+      CHECK( slot->data == 3333 );
       slot->id = 4;
       slot->key = 55;
       slot->data = 666;
@@ -70,9 +70,9 @@ struct scenarios
     transport_type terminator( (void*)data, 3, {2} );
 		{
       auto slot = transport::make_reaquire_release_slot( terminator );
-      PASSES( slot->id == 4 );
-      PASSES( slot->key == 55 );
-      PASSES( slot->data == 666 );
+      CHECK( slot->id == 4 );
+      CHECK( slot->key == 55 );
+      CHECK( slot->data == 666 );
 		}
 	}
 }

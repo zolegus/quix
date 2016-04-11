@@ -108,14 +108,13 @@ struct scenarios
     transport_type processor(  (void*)meta, 2,    {{1,1}} );
     transport_type terminator( (void*)meta, 3,    {{2,1}} );
 
-
-    PASSES( injector.aquire_test() == true );
-    PASSES( injector.reaquire_test() == false );
+    CHECK( injector.aquire_test() == true );
+    CHECK( injector.reaquire_test() == false );
     CATCH( injector.reaquire(), std::runtime_error, "reaquire called by an injector" );
     CATCH( injector.commit(), std::runtime_error, "commit called before aquire/reaquire" );
     CATCH( injector.release(), std::runtime_error, "release called before aquire/reaquire" );
     int &value1 = injector.aquire();
-    PASSES( injector.aquire_test() == false );
+    CHECK( injector.aquire_test() == false );
     CATCH( injector.aquire(), std::runtime_error, "aquire called before current released/committed" );
     CATCH( injector.reaquire(), std::runtime_error, "reaquire called before current released/committed" );
     value1 = 10;
@@ -124,35 +123,35 @@ struct scenarios
     CATCH( injector.commit(), std::runtime_error, "commit called before aquire/reaquire" );
     CATCH( injector.release(), std::runtime_error, "release called before aquire/reaquire" );
 
-    PASSES( processor.aquire_test() == false );
-    PASSES( processor.reaquire_test() == true );
+    CHECK( processor.aquire_test() == false );
+    CHECK( processor.reaquire_test() == true );
     CATCH( processor.aquire(), std::runtime_error, "aquire called when not an injector" );
     CATCH( processor.commit(), std::runtime_error, "commit called before aquire/reaquire" );
     CATCH( processor.release(), std::runtime_error, "release called before aquire/reaquire" );
     int &value2 = processor.reaquire();
-    PASSES( processor.reaquire_test() == false );
+    CHECK( processor.reaquire_test() == false );
     CATCH( processor.aquire(), std::runtime_error, "aquire called before current released/committed" );
     CATCH( processor.reaquire(), std::runtime_error, "reaquire called before current released/committed" );
-    PASSES( value1 == value2 );
+    CHECK( value1 == value2 );
     int *value2addr = &value2;
-    PASSES( value1addr == value2addr );
+    CHECK( value1addr == value2addr );
 		value2 = 20;
     processor.commit();
     CATCH( processor.commit(), std::runtime_error, "commit called before aquire/reaquire" );
     CATCH( processor.release(), std::runtime_error, "release called before aquire/reaquire" );
 
-    PASSES( terminator.aquire_test() == false );
-    PASSES( terminator.reaquire_test() == true );
+    CHECK( terminator.aquire_test() == false );
+    CHECK( terminator.reaquire_test() == true );
     CATCH( terminator.aquire(), std::runtime_error, "aquire called when not an injector" );
     CATCH( terminator.commit(), std::runtime_error, "commit called before aquire/reaquire" );
     CATCH( terminator.release(), std::runtime_error, "release called before aquire/reaquire" );
     int &value3 = terminator.reaquire();
-    PASSES( terminator.reaquire_test() == false );
+    CHECK( terminator.reaquire_test() == false );
     CATCH( terminator.aquire(), std::runtime_error, "aquire called before current released/committed" );
     CATCH( terminator.reaquire(), std::runtime_error, "reaquire called before current released/committed" );
-    PASSES( value2 == value3 );
+    CHECK( value2 == value3 );
     int *value3addr = &value3;
-    PASSES( value2addr == value3addr );
+    CHECK( value2addr == value3addr );
 		terminator.release();
     CATCH( terminator.commit(), std::runtime_error, "commit called before aquire/reaquire" );
     CATCH( terminator.release(), std::runtime_error, "release called before aquire/reaquire" );
@@ -174,49 +173,49 @@ struct scenarios
 
     // Thru channel 1
 		{
-    PASSES( injector11.aquire_test() == true );
+    CHECK( injector11.aquire_test() == true );
     int &value1 = injector11.aquire();
     value1 = 11;
     int *value1addr = &value1;
     injector11.commit();
 
-    PASSES( processor3x.reaquire_test() == true );
+    CHECK( processor3x.reaquire_test() == true );
     int &value2 = processor3x.reaquire();
-    PASSES( value1 == value2 );
+    CHECK( value1 == value2 );
     int *value2addr = &value2;
-    PASSES( value1addr == value2addr );
+    CHECK( value1addr == value2addr );
 		value2 = 21;
     processor3x.commit();
 
-    PASSES( terminator41.reaquire_test() == true );
+    CHECK( terminator41.reaquire_test() == true );
     int &value3 = terminator41.reaquire();
-    PASSES( value2 == value3 );
+    CHECK( value2 == value3 );
     int *value3addr = &value3;
-    PASSES( value2addr == value3addr );
+    CHECK( value2addr == value3addr );
 		terminator41.release();
 		}  
 
     // Thru channel 2
 		{
-    PASSES( injector22.aquire_test() == true );
+    CHECK( injector22.aquire_test() == true );
     int &value1 = injector22.aquire();
     value1 = 12;
     int *value1addr = &value1;
     injector22.commit();
 
-    PASSES( processor3x.reaquire_test() == true );
+    CHECK( processor3x.reaquire_test() == true );
     int &value2 = processor3x.reaquire();
-    PASSES( value1 == value2 );
+    CHECK( value1 == value2 );
     int *value2addr = &value2;
-    PASSES( value1addr == value2addr );
+    CHECK( value1addr == value2addr );
 		value2 = 22;
     processor3x.commit();
 
-    PASSES( terminator52.reaquire_test() == true );
+    CHECK( terminator52.reaquire_test() == true );
     int &value3 = terminator52.reaquire();
-    PASSES( value2 == value3 );
+    CHECK( value2 == value3 );
     int *value3addr = &value3;
-    PASSES( value2addr == value3addr );
+    CHECK( value2addr == value3addr );
 		terminator52.release();
 		}
 	}

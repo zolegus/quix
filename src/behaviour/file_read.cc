@@ -70,7 +70,7 @@ struct api
 		{
 		  types::event event;
       file_read( event );
-		  PASSES( std::string( event.buffer_mem->data, event.buffer_mem->size ) == line );
+		  CHECK( std::string( event.buffer_mem->data, event.buffer_mem->size ) == line );
 	  } 
   }
 }

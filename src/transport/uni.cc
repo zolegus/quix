@@ -117,12 +117,12 @@ struct scenarios
     injector.commit();
 
     uint64_t &value2 = processor.reaquire();
-    PASSES( value1 == value2 );
+    CHECK( value1 == value2 );
 		value2 = 20;
     processor.commit();
 
     uint64_t &value3 = terminator.reaquire();
-    PASSES( value2 == value3 );
+    CHECK( value2 == value3 );
 		terminator.release();
 	}
 }

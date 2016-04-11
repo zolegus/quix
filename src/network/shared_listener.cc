@@ -99,8 +99,8 @@ struct plumbing
     fd_receiver_thread.join();
     fd_sender_thread.join();
 
-    PASSES( vfut_receiver.get() > 0 );
-    PASSES( vfut_sender.get() > 0 );
+    CHECK( vfut_receiver.get() > 0 );
+    CHECK( vfut_sender.get() > 0 );
   }
 
   void structors_heap()
@@ -133,8 +133,8 @@ struct plumbing
     fd_receiver_thread.join();
     fd_sender_thread.join();
 
-    PASSES( vfut_receiver.get() > 0 );
-    PASSES( vfut_sender.get() > 0 );
+    CHECK( vfut_receiver.get() > 0 );
+    CHECK( vfut_sender.get() > 0 );
   }
 }
 plumbing;

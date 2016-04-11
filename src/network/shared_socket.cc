@@ -127,12 +127,12 @@ struct plumbing
     fd_listener_thread.join();
 		fd_sender_thread.join();
 
-    PASSES( sender_buff.size() == client_recvd );
-    PASSES( sender_buff == std::string( client_recv_buff, client_recvd ) );
+    CHECK( sender_buff.size() == client_recvd );
+    CHECK( sender_buff == std::string( client_recv_buff, client_recvd ) );
 
-    PASSES( client_send_buff.size() == client_sent );
-    PASSES( client_send_buff.size() == receiver_recvd );
-    PASSES( client_send_buff == std::string( receiver_recv_buff, receiver_recvd ) );
+    CHECK( client_send_buff.size() == client_sent );
+    CHECK( client_send_buff.size() == receiver_recvd );
+    CHECK( client_send_buff == std::string( receiver_recv_buff, receiver_recvd ) );
   }
 
   void structors_heap()

@@ -188,8 +188,8 @@ struct api
 
     echo_thread.join();
 
-    PASSES( send_size == recv_size );
-    PASSES( send_buff == std::string( recv_buff, recv_size ) );
+    CHECK( send_size == recv_size );
+    CHECK( send_buff == std::string( recv_buff, recv_size ) );
   }
 
   void send_recv_unix()
@@ -212,8 +212,8 @@ struct api
 
     echo_thread.join();
 
-    PASSES( send_size == recv_size );
-    PASSES( send_buff == std::string( recv_buff, recv_size ) );
+    CHECK( send_size == recv_size );
+    CHECK( send_buff == std::string( recv_buff, recv_size ) );
   }
 
   void send_recv_fd()
@@ -258,11 +258,11 @@ struct api
     echo_fd_thread.join();
     connector_thread.join();
 
-    PASSES( send_size == recv_size );
-    PASSES( send_buff == std::string( recv_buff, recv_size ) );
+    CHECK( send_size == recv_size );
+    CHECK( send_buff == std::string( recv_buff, recv_size ) );
 
-    PASSES( send_size_inet == recv_size_inet );
-    PASSES( send_buff_inet == std::string( recv_buff_inet, recv_size_inet ) );
+    CHECK( send_size_inet == recv_size_inet );
+    CHECK( send_buff_inet == std::string( recv_buff_inet, recv_size_inet ) );
   }
 }
 api;

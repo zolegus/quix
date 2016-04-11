@@ -50,10 +50,10 @@ struct api
 	  sa.sun_family = AF_LOCAL;
   	strcpy( sa.sun_path, address_arg.c_str() );
 
-    PASSES( address.addr()->sa_family == reinterpret_cast< struct sockaddr& >( sa ).sa_family );
+    CHECK( address.addr()->sa_family == reinterpret_cast< struct sockaddr& >( sa ).sa_family );
     const struct sockaddr_un *address_ptr = reinterpret_cast< const struct sockaddr_un* >( address.addr() ) ;
-    PASSES( address_ptr->sun_family == sa.sun_family );
-    PASSES( std::strcmp( address_ptr->sun_path, sa.sun_path ) == 0 );
+    CHECK( address_ptr->sun_family == sa.sun_family );
+    CHECK( std::strcmp( address_ptr->sun_path, sa.sun_path ) == 0 );
   }
 
   void size()
@@ -61,7 +61,7 @@ struct api
 		std::string address_arg( "/tmp/address_unix_test.unix" );
 		network::address_unix address( address_arg );
 
-    PASSES( address.size() == sizeof( sockaddr_un ) );
+    CHECK( address.size() == sizeof( sockaddr_un ) );
   }
 }
 api;
