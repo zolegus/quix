@@ -1,3 +1,5 @@
+Please note: Quix is on old until the next time I find myself out of contract due mainly to time constraints
+
 #QUIX
 Multi process quick fix engine using no barriers or other sync primitives to take advantage of new intel cpus with high core counts 
 
